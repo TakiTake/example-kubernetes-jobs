@@ -1,0 +1,42 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: slackboard
+spec:
+  selector:
+    app: slackboard
+  ports:
+  - protocol: TCP
+    port: 29800
+    targetPort: 29800
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: slackboard
+  labels:
+    app: slackboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slackboard
+  template:
+    metadata:
+      labels:
+        app: slackboard
+    spec:
+      containers:
+      - name: slackboard
+        image: slackboard
+        imagePullPolicy: IfNotPresent
+        command: ["/root/slackboard", "-c", "/root/conf/slackboard.toml"]
+        ports:
+        - containerPort: 29800
+        volumeMounts:
+          - name: config-volume
+            mountPath: /root/conf
+      volumes:
+        - name: config-volume
+          configMap:
+            name: slackboard
