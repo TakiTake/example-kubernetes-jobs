@@ -1,0 +1,22 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: slackboard-cli
+  labels:
+    app: slackboard-cli
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hi-takky
+            image: slackboard-cli
+            imagePullPolicy: IfNotPresent
+            args:
+            - /bin/sh
+            - -c
+            - echo "Hi Takky" | /root/slackboard-cli -t general -s ${SLACKBOARD_SERVICE_HOST}:${SLACKBOARD_SERVICE_PORT}
+          restartPolicy: OnFailure
+
