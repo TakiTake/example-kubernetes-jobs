@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: slackboard-cli
+  name: hi-takky
   labels:
-    app: slackboard-cli
+    app: hi-takky
 spec:
   schedule: "*/5 * * * *"
   jobTemplate:

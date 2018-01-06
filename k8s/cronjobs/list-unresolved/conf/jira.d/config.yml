@@ -1,0 +1,9 @@
+queries:
+  unresolved: |
+    project = "{{.project}}" AND labels = "External" AND resolution = Unresolved ORDER BY createdDate ASC
+
+custom-commands:
+  - name: list-unresolved
+    help: display unresolved issues come from external
+    script: |-
+      {{jira}} list --named-query "unresolved" --project "DEVOPS"

@@ -1,0 +1,39 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: list-unresolved
+  labels:
+    cronjob: list-unresolved
+spec:
+  concurrencyPolicy: Replace
+  schedule: "50 8 * * 1-5"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: list-unresolved
+            image: jira
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: JIRA_USERNAME
+                value: takeshi.takizawa
+              - name: JIRA_PASSWORD
+                value: ***
+            args:
+            - "/bin/sh"
+            - "/root/entrypoint.sh"
+            volumeMounts:
+              - name: entrypoint
+                mountPath: /root/entrypoint.sh
+                subPath: entrypoint.sh
+              - name: jirad
+                mountPath: /root/.jira.d
+          restartPolicy: OnFailure
+          volumes:
+            - name: entrypoint
+              configMap:
+                name: list-unresolved-entrypoint
+            - name: jirad
+              configMap:
+                name: list-unresolved-jirad
