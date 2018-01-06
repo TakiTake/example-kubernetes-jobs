@@ -29,19 +29,23 @@ $ eval $(minikube docker-env)
 ## Build docker images
 
 ```sh
-$ docker build -t slackboard     docker/slackboard
+$ docker build -t slackboard     docker/slackboard/
 $ docker build -t slackboard-cli docker/slackboard-cli/
+$ docker build -t jira           docker/jira/
 ```
 
 ## Create Kubernetes resources
 
 ```sh
-# Create slackboard.toml as a Kubernetes configmap
-$ kubectl create configmap slackboard --from-file=conf/slackboard.toml
+# Create ConfigMaps
+$ kubectl create configmap slackboard --from-file=k8s/apps/slackboard/conf/slackboard.toml
+$ kubectl create configmap list-unresolved-entrypoint --from-file=k8s/cronjobs/list-unresolved/conf/entrypoint.sh
+$ kubectl create configmap list-unresolved-jirad --from-file=k8s/cronjobs/list-unresolved/conf/jira.d
 
 # Create other resources
-$ kubectl create -f slackboard.yaml
-$ kubectl create -f slackboard-cli.yaml
+$ kubectl create -f k8s/apps/slackboard/slackboard.yaml
+$ kubectl create -f k8s/cronjobs/hi-takky/hi-takky.yaml
+$ kubectl create -f k8s/cronjobs/list-unresolved/list-unresolved.yaml
 ```
 
 ```sh
